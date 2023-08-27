@@ -2,6 +2,8 @@ package com.springboot.restapi.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +21,7 @@ public class MyController {
 	
 	@Autowired
 	private CourseService courseService;
-	
-	@GetMapping("/home")
-	public String home() {
-		return "This is my home page";
-	}
-	
+	 
 	//get all courses
 	@GetMapping("/courses")
 	public List<Courses> getCourses(){
@@ -43,8 +40,13 @@ public class MyController {
 	}
 	
 	@DeleteMapping("/courses/{courseId}")
-	public Courses deleteCourses(@PathVariable String courseId) {
-		return this.courseService.deleteCourses(Long.parseLong(courseId));
+	public ResponseEntity<HttpStatus> deleteCourses(@PathVariable String courseId) {
+		try {
+			this.courseService.deleteCourses(Long.parseLong(courseId));
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+		}
 	}
 	
 	@PutMapping("/courses")
