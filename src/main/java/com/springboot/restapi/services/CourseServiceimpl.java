@@ -1,6 +1,7 @@
 package com.springboot.restapi.services;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ public class CourseServiceimpl implements CourseService {
 
 	@Override
 	public List<Courses> getCourses() {
-		
 		return list;
 	}
 
@@ -43,6 +43,33 @@ public class CourseServiceimpl implements CourseService {
 	public Courses addCourse(Courses course) {
 		list.add(course);
 		return course;
+	}
+
+	@Override
+	public Courses deleteCourses(long courseId) {
+		Courses c = null;
+		Iterator<Courses> iterator = list.iterator();
+		while(iterator.hasNext()) {
+			Courses course = iterator.next();
+			if(course.getId()==courseId) {
+				c = course;
+				iterator.remove();
+				break;
+			}
+		}
+		return c;
+	}
+
+	@Override
+	public Courses updateCourses(Courses course) {
+		for (Courses c : list) {
+			if(c.getId()==course.getId()) {
+				c.setTitleString(course.getTitleString());
+				c.setDescriptionString(course.getDescriptionString());
+				return c;
+			}
+		}
+		return null;
 	}
 
 }
